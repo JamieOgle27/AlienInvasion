@@ -1,10 +1,10 @@
 import pygame
-from pygame.sprite import sprite
+from pygame.sprite import Sprite
 
 class Bullet(Sprite):
     """A class to manage bullets fired from the ship."""
 
-    def__init__(self, ai_game):
+    def __init__(self, ai_game):
 
         super().__init__()
         self.screen = ai_game.screen
