@@ -37,8 +37,18 @@ class AlienInvasion:
 
         self._create_fleet()
 
+        self.mouse_button_up = True
+
         #Make the play Button
         self.play_button = Button(self, "Play")
+
+        #Make the upgrade buttons
+        self.upgrade_button = Button(self, "Upgrade", 1.5, 0.5)
+        self.next_button = Button(self, "Next", 1.5, 1.5)
+
+        #Make the enemy buttons
+        self.add_enemy_button = Button(self, "Add Enemy", 1.5, 0.5)
+        self.next_level_button = Button(self, "Next Level", 1.5, 1.5)
 
         pygame.display.set_caption("Alien Invasion")
 
@@ -67,15 +77,46 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN and self.mouse_button_up:
                 mouse_pos = pygame.mouse.get_pos()
-                self._check_play_button(mouse_pos)
+                self._check_buttons(mouse_pos)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.mouse_button_up = True
+
+    def _check_buttons(self, mouse_pos):
+        if self.stats.game_active == 0: # 0 - main_menu
+            self._check_play_button(mouse_pos)
+            self.mouse_button_up = False
+        elif self.stats.game_active == 1: # 1 - gameplay
+            self.mouse_button_up = False
+        elif self.stats.game_active == 2: # 2 - upagrade_screen
+            self._check_upgrade_buttons(mouse_pos)
+            self.mouse_button_up = False
+        elif self.stats.game_active == 3: # 3 - enemy_screen
+            self._check_enemy_buttons(mouse_pos)
+            self.mouse_button_up = False
 
     def _check_play_button(self, mouse_pos):
         """Start a new game when the player clicks the play button"""
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.game_active == 0: # 0 - main_menu
+        play_button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if play_button_clicked:
             self._start_game()
+
+    def _check_upgrade_buttons(self, mouse_pos):
+        upgrade_button_clicked = self.upgrade_button.rect.collidepoint(mouse_pos)
+        if upgrade_button_clicked:
+            print("Upgrade Button Clicked") #Todo: upgrade system
+        next_button_clicked = self.next_button.rect.collidepoint(mouse_pos)
+        if next_button_clicked:
+            self.enemy_screen()
+
+    def _check_enemy_buttons(self, mouse_pos):
+        add_enemy_button_clicked = self.add_enemy_button.rect.collidepoint(mouse_pos)
+        if add_enemy_button_clicked:
+            print("Add Enemy Button Clicked") #Todo: Extra Enemies system
+        next_level_button_clicked = self.next_level_button.rect.collidepoint(mouse_pos)
+        if next_level_button_clicked:
+            self.next_level()
 
     def _start_game(self):
          #Reset game stats
@@ -110,6 +151,7 @@ class AlienInvasion:
             self._fire_bullet()
         elif event.key == pygame.K_p and self.stats.game_active == 0: #0 - main_menu
             self._start_game()
+
 
     def _check_keyup_events(self, event):
         """respons to key relseases"""
@@ -151,18 +193,10 @@ class AlienInvasion:
         self.stats.game_active = 2 # 2 = upgrade_screen
         pygame.mouse.set_visible(True)
 
-        sleep(5)
-
-        self.enemy_screen()
-
     def enemy_screen(self):
         """Enemy Screen - for adding more enemies to the next level"""
         self.stats.game_active = 3 # 3 = enemy_screen
-        pygame.mouse.set_visible(False)
-
-        sleep(5)
-
-        self.next_level()
+        pygame.mouse.set_visible(True)
 
 
     def next_level(self):
@@ -278,10 +312,20 @@ class AlienInvasion:
         #Draw the scoreboard
         self.sb.show_score()
 
-
-        #Draw play button if game is inactive
+        #Draw play button if game_state is main_menu
         if self.stats.game_active == 0: # 0 - main_menu
             self.play_button.draw_button()
+
+        #Draw upgrade screen if game_state is upgrade_screen
+        if self.stats.game_active == 2: # 2 - upgrade_screen
+            self.upgrade_button.draw_button() #Draw this for now, but it shouldn't work
+            self.next_button.draw_button() #Draw this for now, but it shouldn't work
+
+
+        #Draw the enemy screen if game_state is enemy_screen
+        if self.stats.game_active == 3: # 3 - enemy_screen
+            self.add_enemy_button.draw_button() #Draw this for now, but it shouldn't work
+            self.next_level_button.draw_button() #Draw this for now, but it shouldn't work
 
         pygame.display.flip()
 
