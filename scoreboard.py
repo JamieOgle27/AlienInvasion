@@ -29,6 +29,7 @@ class Scoreboard:
         """Turn the score into a rendered image"""
         rounded_score = round(self.stats.score, -1)
         score_str = "{:,}".format(rounded_score)
+        score_str = str(f"Score: {score_str}")
         self.score_image = self.font.render(score_str, True, self.text_color, self.settings.bg_color)
 
         #Display the score in the top right of the screen
@@ -40,6 +41,7 @@ class Scoreboard:
         """Turn the high score into a rendered image."""
         high_score = round(self.stats.high_score, -1)
         high_score_str = "{:,}".format(high_score)
+        high_score_str = str(f"High Score: {high_score_str}")
         self.high_score_image = self.font.render(high_score_str, True, self.text_color, self.settings.bg_color)
 
         #Center the high score at the top of the screen.
@@ -49,7 +51,7 @@ class Scoreboard:
 
     def prep_level(self):
         """Turn the level number into a rendered image"""
-        level_str = str(self.stats.level)
+        level_str = str(f"Level: {self.stats.level}")
         self.level_image = self.font.render(level_str, True, self.text_color, self.settings.bg_color)
 
         #Position the level no below the score
@@ -68,7 +70,7 @@ class Scoreboard:
 
     def prep_enemies(self):
         """Display remianing enemeies"""
-        enemies_str = str(self.stats.enemies_left)
+        enemies_str = str(f"Enemies: {self.stats.enemies_left}")
         self.enemy_image = self.font.render(enemies_str, True, self.text_color, self.settings.bg_color)
 
         """Position enemies left beneath the ships left"""

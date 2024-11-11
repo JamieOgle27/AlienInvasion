@@ -160,7 +160,7 @@ class AlienInvasion:
         self._check_alien_ship_collisons()
         self._check_aliens_bottom()
 
-        #Update enemies left UI text
+        #Update enemies left UI
         self.stats.enemies_left = len(self.aliens)
         self.sb.prep_enemies()
 
