@@ -8,11 +8,10 @@ class GameStats:
         #Start game in active state
         self.game_active = False 
         self.high_score = 0 #Only initilize this once then it should never be reset!
-
+        self.enemies_left = 0 #Doesn't need reset as it's setup when the fleet is created
 
     def reset_stats(self):
         """Initialize stats that can change during the game"""
         self.ships_left = self.settings.ship_limit
         self.score = 0
         self.level = 1
-        self.enemies_left = 0
