@@ -151,12 +151,18 @@ class AlienInvasion:
             self.stats.level += 1
             self.sb.prep_level()
 
+
+
     def _update_aliens(self):
         """Update pos of aliens"""
         self._check_fleet_edges()
         self.aliens.update()
         self._check_alien_ship_collisons()
         self._check_aliens_bottom()
+
+        #Update enemies left UI text
+        self.stats.enemies_left = len(self.aliens)
+        self.sb.prep_enemies()
 
     def _check_aliens_bottom(self):
         """Check if any aliens have hit the bottom of the screen"""
