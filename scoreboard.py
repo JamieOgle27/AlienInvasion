@@ -23,6 +23,7 @@ class Scoreboard:
         self.prep_high_score()
         self.prep_level()
         self.prep_ships()
+        self.prep_enemies()
 
     def prep_score(self):
         """Turn the score into a rendered image"""
@@ -65,12 +66,24 @@ class Scoreboard:
             ship.rect.y = 10
             self.ships.add(ship)
 
+    def prep_enemies(self):
+        """Display remianing enemeies"""
+        enemies_str = str(self.stats.enemies_left)
+        self.enemy_image = self.font.render(enemies_str, True, self.text_color, self.settings.bg_color)
+
+        """Position enemies left beneath the ships left"""
+        self.enemy_rect = self.enemy_image.get_rect()
+        self.enemy_rect.left = self.screen_rect.left + 10 #This needs an offset or is drawn against the border of the screen
+        self.enemy_rect.top = self.score_rect.bottom + 10 #Use score as a refrence for .y position to keep this in line with level text
+
+
 
     def show_score(self):
         """Draw score/level/ships to the screen"""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        self.screen.blit(self.enemy_image, self.enemy_rect)
         self.ships.draw(self.screen)
 
     def check_high_score(self):
