@@ -43,12 +43,22 @@ class AlienInvasion:
         self.play_button = Button(self, "Play")
 
         #Make the upgrade buttons
-        self.upgrade_button = Button(self, "Upgrade", 1.5, 0.5)
-        self.next_button = Button(self, "Next", 1.5, 1.5)
+        self.upgrade_buttons = []
+
+        self.upgrade_buttons.append(Button(self, "Bullet Size", 0.5, 0.5))
+        self.upgrade_buttons.append(Button(self, "Bullet Penetration", 0.5, 1))
+        self.upgrade_buttons.append(Button(self, "Shield", 0.5, 1.5))
+        self.upgrade_buttons.append(Button(self, "Double Bullet", 1, 0.5))
+        self.upgrade_buttons.append(Button(self, "Max Bullets", 1, 1))
+        self.upgrade_buttons.append(Button(self, "Extra Life", 1, 1.5))
+        self.upgrade_buttons.append(Button(self, "Speed", 1.5, 0.5))
+        self.upgrade_buttons.append(Button(self, "Bullet Bounce", 1.5, 1))
+        self.upgrade_buttons.append(Button(self, "Bombs", 1.5, 1.5))
+        self.next_button = Button(self, "Next", 1.75, 1.75)
 
         #Make the enemy buttons
         self.add_enemy_button = Button(self, "Add Enemy", 1.5, 0.5)
-        self.next_level_button = Button(self, "Next Level", 1.5, 1.5)
+        self.next_level_button = Button(self, "Next Level", 1.75, 1.75)
 
         pygame.display.set_caption("Alien Invasion")
 
@@ -103,9 +113,30 @@ class AlienInvasion:
             self._start_game()
 
     def _check_upgrade_buttons(self, mouse_pos):
-        upgrade_button_clicked = self.upgrade_button.rect.collidepoint(mouse_pos)
-        if upgrade_button_clicked:
-            print("Upgrade Button Clicked") #Todo: upgrade system
+        for value in range(len(self.upgrade_buttons)):
+            upgrade_button_clicked = self.upgrade_buttons[value].rect.collidepoint(mouse_pos)
+            if upgrade_button_clicked:
+                #Todo: upgrade system
+                if value == 0:
+                    self.settings.bullet_width += 10
+                if value == 1:
+                    print("Bullet Penetration")
+                if value == 2:
+                    print("Shield")
+                if value == 3:
+                    print("Double Bullets")
+                if value == 4:
+                    self.settings.bullets_allowed += 1
+                if value == 5:
+                    self.ships_left += 1
+                if value == 6:
+                    self.settings.ship_speed += 0.2
+                if value == 7:
+                    print("Bounce Bullet")
+                if value == 8:
+                    print("Bombs")
+
+
         next_button_clicked = self.next_button.rect.collidepoint(mouse_pos)
         if next_button_clicked:
             self.enemy_screen()
@@ -318,7 +349,8 @@ class AlienInvasion:
 
         #Draw upgrade screen if game_state is upgrade_screen
         if self.stats.game_active == 2: # 2 - upgrade_screen
-            self.upgrade_button.draw_button() #Draw this for now, but it shouldn't work
+            for value in range(len(self.upgrade_buttons)):
+                self.upgrade_buttons[value].draw_button() #Draw this for now, but it shouldn't work
             self.next_button.draw_button() #Draw this for now, but it shouldn't work
 
 
