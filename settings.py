@@ -15,7 +15,7 @@ class Settings:
 
         # Bullet settings
         self.bullet_speed = 2.1
-        self.bullet_width = 300 #Upgrade idea: Thick bullets (increase bullet width)
+        self.bullet_width = 3000 #Upgrade idea: Thick bullets (increase bullet width)
         self.bullet_height = 15
         self.bullet_color = (20,20,20)
         self.bullets_allowed = 4

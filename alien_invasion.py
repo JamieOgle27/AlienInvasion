@@ -48,7 +48,7 @@ class AlienInvasion:
         while True:
             self._check_events()
  
-            if self.stats.game_active:
+            if self.stats.game_active == 1: #1 - gameplay
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
@@ -74,13 +74,13 @@ class AlienInvasion:
     def _check_play_button(self, mouse_pos):
         """Start a new game when the player clicks the play button"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.stats.game_active:
+        if button_clicked and self.stats.game_active == 0: # 0 - main_menu
             self._start_game()
 
     def _start_game(self):
          #Reset game stats
         self.stats.reset_stats()
-        self.stats.game_active = True
+        self.stats.game_active = 1 # 1 - gameplay
         self.sb.prep_score()
         self.sb.prep_level()
         self.sb.prep_ships()
@@ -108,7 +108,7 @@ class AlienInvasion:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
-        elif event.key == pygame.K_p and not self.stats.game_active:
+        elif event.key == pygame.K_p and self.stats.game_active == 0: #0 - main_menu
             self._start_game()
 
     def _check_keyup_events(self, event):
@@ -142,16 +142,40 @@ class AlienInvasion:
             self.sb.check_high_score()
 
         if not self.aliens:
-            #Destroy existing bullets and create new fleet
+            #Destroy existing bullets
             self.bullets.empty()
-            self._create_fleet()
-            self.settings.increase_speed()
+            self.upgrade_screen()
 
-            #increase level
-            self.stats.level += 1
-            self.sb.prep_level()
+    def upgrade_screen(self):
+        """Upgrade Alien Craft screen"""
+        self.stats.game_active = 2 # 2 = upgrade_screen
+        pygame.mouse.set_visible(True)
+
+        sleep(5)
+
+        self.enemy_screen()
+
+    def enemy_screen(self):
+        """Enemy Screen - for adding more enemies to the next level"""
+        self.stats.game_active = 3 # 3 = enemy_screen
+        pygame.mouse.set_visible(False)
+
+        sleep(5)
+
+        self.next_level()
 
 
+    def next_level(self):
+        self.stats.game_active = 1 # 1 - gameplay
+        pygame.mouse.set_visible(False)
+
+        #create new fleet
+        self._create_fleet()
+        self.settings.increase_speed()
+
+        #increase level
+        self.stats.level += 1
+        self.sb.prep_level()
 
     def _update_aliens(self):
         """Update pos of aliens"""
@@ -196,7 +220,7 @@ class AlienInvasion:
             # Pause
             sleep(0.5)
         else:
-            self.stats.game_active = False
+            self.stats.game_active = 0 #main_menu
             pygame.mouse.set_visible(True)
 
     def _check_fleet_edges(self):
@@ -256,7 +280,7 @@ class AlienInvasion:
 
 
         #Draw play button if game is inactive
-        if not self.stats.game_active:
+        if self.stats.game_active == 0: # 0 - main_menu
             self.play_button.draw_button()
 
         pygame.display.flip()
