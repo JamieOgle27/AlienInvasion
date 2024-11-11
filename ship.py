@@ -25,12 +25,12 @@ class Ship(Sprite):
         self.moving_right = False
         self.moving_left = False
 
-    def update(self):
+    def update(self, dt):
         """Update the ship's position based on the movement flag"""
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.x += self.settings.ship_speed
+            self.x += self.settings.ship_speed * dt
         if self.moving_left and self.rect.left > 0:
-            self.x -= self.settings.ship_speed
+            self.x -= self.settings.ship_speed * dt
 
         #Update rect object from self.x
         self.rect.x = self.x

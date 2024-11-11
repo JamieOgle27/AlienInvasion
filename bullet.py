@@ -18,10 +18,10 @@ class Bullet(Sprite):
         #Store the bullet's position as a decimal value
         self.y = float(self.rect.y)
 
-    def update(self):
+    def update(self, dt):
         """Move the bullet up the screen"""
         #Update the decimal position of the bullet
-        self.y -= self.settings.bullet_speed
+        self.y -= self.settings.bullet_speed * dt
         #update the rect position
         self.rect.y = self.y
 

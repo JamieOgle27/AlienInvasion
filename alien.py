@@ -21,9 +21,9 @@ class Alien(Sprite):
         #Store the alien's horizontal pos
         self.x = float(self.rect.x)
 
-    def update(self):
+    def update(self, dt):
         """Move the aliens to the right."""
-        self.x += (self.settings.alien_speed * self.settings.fleet_direction)
+        self.x += (self.settings.alien_speed * self.settings.fleet_direction * dt)
         self.rect.x = self.x
 
     def check_edges(self):

@@ -1,5 +1,5 @@
 import sys
-from time import sleep
+import time
 
 import pygame
 
@@ -62,6 +62,9 @@ class AlienInvasion:
 
         pygame.display.set_caption("Alien Invasion")
 
+        self.prev_time = time.time()
+        self.dt = 0
+
 
     def run_game(self):
         """Start the main loop for the game"""
@@ -69,7 +72,7 @@ class AlienInvasion:
             self._check_events()
  
             if self.stats.game_active == 1: #1 - gameplay
-                self.ship.update()
+                self.ship.update(self.dt)
                 self._update_bullets()
                 self._update_aliens()
 
@@ -77,6 +80,13 @@ class AlienInvasion:
 
             # Make the most recently drawn screen visible
             pygame.display.flip()
+
+            self.delta_time()
+
+    def delta_time(self):
+        now = time.time()
+        self.dt = now - self.prev_time
+        self.prev_time = now
 
     def _check_events(self):
     # watch for keyboard and mouse events.
@@ -156,7 +166,7 @@ class AlienInvasion:
         self.sb.prep_score()
         self.sb.prep_level()
         self.sb.prep_ships()
-        sleep(0.2)
+        time.sleep(0.2)
 
         #Get rid of aliens and bullets
         self.aliens.empty()
@@ -192,7 +202,7 @@ class AlienInvasion:
             self.ship.moving_left = False
 
     def _update_bullets(self):
-        self.bullets.update()
+        self.bullets.update(self.dt)
 
         #get rid of bullets that have disappeared
         for bullet in self.bullets.copy():
@@ -245,7 +255,7 @@ class AlienInvasion:
     def _update_aliens(self):
         """Update pos of aliens"""
         self._check_fleet_edges()
-        self.aliens.update()
+        self.aliens.update(self.dt)
         self._check_alien_ship_collisons()
         self._check_aliens_bottom()
 
@@ -283,7 +293,7 @@ class AlienInvasion:
             self.ship.center_ship()
 
             # Pause
-            sleep(0.5)
+            time.sleep(0.5)
         else:
             self.stats.game_active = 0 #main_menu
             pygame.mouse.set_visible(True)
