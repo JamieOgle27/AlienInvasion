@@ -145,7 +145,8 @@ class AlienInvasion:
                     self.settings.bullet_width *= 1.2
                     self.settings.bullet_height *= 1.1
                 if value == 1:
-                    print("Bullet Penetration")
+                    self.settings.bullet_penetration += 1
+                    #print("Bullet Penetration")
                 if value == 2:
                     print("Shield")
                 if value == 3:
@@ -232,12 +233,24 @@ class AlienInvasion:
     def _check_bullet_alien_collisons(self):        
         #Check for any bullets that have hit aliens
         #If so alien + bullet need to be removed
-        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True) #Upgrade idea: Powerful bullets: set arg 3 to False and bullets don't get destroyed when they hit an alien
+        collisionsAlt = pygame.sprite.groupcollide(self.aliens, self.bullets, False, False)
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, False, True) 
         if collisions:
+            print(collisions.values())
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
+        if collisionsAlt:
+            for bullets in collisionsAlt.values():
+                i = 0
+                while i < len(collisionsAlt.values()):
+                    if bullets[i].bullet_penetration == 0:
+                        self.bullets.remove(bullets[i])
+                    elif bullets[i].bullet_penetration > 0:
+                        bullets[i].bullet_penetration -= 1
+                    i += 1
+
 
         if not self.aliens:
             #Destroy existing bullets
