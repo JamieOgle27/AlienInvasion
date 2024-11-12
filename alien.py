@@ -31,6 +31,8 @@ class Alien(Sprite):
         """Return True if alien as at the edge of the screen"""
         screen_rect = self.screen.get_rect()
 
-        if self.rect.right >= screen_rect.right or self.rect.left <= 0:
+        if self.rect.right >= screen_rect.right and self.settings.fleet_direction > 0:
+            return True
+        if self.rect.left <= 0 and self.settings.fleet_direction < 0:
             return True
 

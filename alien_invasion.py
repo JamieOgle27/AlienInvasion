@@ -40,7 +40,7 @@ class AlienInvasion:
         self.mouse_button_up = True
 
         #Make the play Button
-        self.play_button = Button(self, "Play")
+        self.play_button = Button(self, "Play", 1, 1, self.settings.screen_width/10, self.settings.screen_height/10)
 
         #Make the upgrade buttons
         self.upgrade_buttons = []
@@ -72,9 +72,11 @@ class AlienInvasion:
             self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
 
         #Setup speed/scale of objects relevent to the screen size, so they're always consistent.
-        self.settings.alien_speed = self.settings.screen_width / 10
-        self.settings.fleet_drop_speed = self.settings.screen_height / 20
-        self.settings.bullet_width = self.settings.screen_height / 150
+        self.settings.alien_speed = self.settings.screen_width / 20
+        self.settings.fleet_drop_speed = self.settings.screen_height / 40
+        self.settings.bullet_width = self.settings.screen_width / 200
+        self.settings.bullet_height = self.settings.screen_height / 100
+        self.settings.bullet_speed = self.settings.screen_height
 
     def run_game(self):
         """Start the main loop for the game"""
@@ -138,7 +140,8 @@ class AlienInvasion:
             if upgrade_button_clicked:
                 #Todo: upgrade system
                 if value == 0:
-                    self.settings.bullet_width += 10
+                    self.settings.bullet_width *= 1.2
+                    self.settings.bullet_height *= 1.1
                 if value == 1:
                     print("Bullet Penetration")
                 if value == 2:
@@ -317,6 +320,7 @@ class AlienInvasion:
 
     def _change_fleet_direction(self):
         """Drop the entire fleet and change the fleet's direction"""
+        print("_change_fleet_direction")
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
@@ -326,14 +330,14 @@ class AlienInvasion:
         #Make a alien
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
-        available_space_x = self.settings.screen_width - (2 * alien_width)
+        available_space_x = self.settings.screen_width - (5 * alien_width)
         number_aliens_x = available_space_x // (2 * alien_width)
 
 
         #Determine how many rows of aliens fit on screen
         ship_height = self.ship.rect.height
         available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
-        number_rows = available_space_y // (2* alien_height)
+        number_rows = available_space_y // (2 * alien_height)
 
         #Create the full fleet of aliens
         for row_number in range(number_rows):
