@@ -38,27 +38,29 @@ class AlienInvasion:
     def buttons_init(self):
         """Setup buttons and button behaviour"""
         self.mouse_button_up = True
+        standard_button_height = self.settings.screen_height/9
+        standard_button_width = self.settings.screen_width/4
 
         #Make the play Button
-        self.play_button = Button(self, "Play", 1, 1, self.settings.screen_width/10, self.settings.screen_height/10)
+        self.play_button = Button(self, "Play", 1, 1, standard_button_width , standard_button_height)
 
         #Make the upgrade buttons
         self.upgrade_buttons = []
 
-        self.upgrade_buttons.append(Button(self, "Bullet Size", 0.5, 0.5))
-        self.upgrade_buttons.append(Button(self, "Bullet Penetration", 0.5, 1))
-        self.upgrade_buttons.append(Button(self, "Shield", 0.5, 1.5))
-        self.upgrade_buttons.append(Button(self, "Double Bullet", 1, 0.5))
-        self.upgrade_buttons.append(Button(self, "Max Bullets", 1, 1))
-        self.upgrade_buttons.append(Button(self, "Extra Life", 1, 1.5))
-        self.upgrade_buttons.append(Button(self, "Speed", 1.5, 0.5))
-        self.upgrade_buttons.append(Button(self, "Bullet Bounce", 1.5, 1))
-        self.upgrade_buttons.append(Button(self, "Bombs", 1.5, 1.5))
-        self.next_button = Button(self, "Next", 1.75, 1.75)
+        self.upgrade_buttons.append(Button(self, "Shot Size", 0.5, 0.35, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Penetration", 0.5, 1, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Shield", 0.5, 1.65, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Double Shot", 1, 0.35, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Max Shots", 1, 1, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Extra Life", 1, 1.65, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Speed", 1.5, 0.35, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Bounce", 1.5, 1, standard_button_width , standard_button_height))
+        self.upgrade_buttons.append(Button(self, "Bombs", 1.5, 1.65, standard_button_width , standard_button_height))
+        self.next_button = Button(self, "Next", 1.9, 1.8, standard_button_width , standard_button_height)
 
         #Make the enemy buttons
-        self.add_enemy_button = Button(self, "Add Enemy", 1.5, 0.5)
-        self.next_level_button = Button(self, "Next Level", 1.75, 1.75)
+        self.add_enemy_button = Button(self, "Add Enemy", 1.5, 1, standard_button_width , standard_button_height)
+        self.next_level_button = Button(self, "Next Level", 1.9, 1.8, standard_button_width , standard_button_height)
 
     def settings_init(self):
         """Setup any inital settings, including screen size, speed of objects"""
@@ -74,7 +76,7 @@ class AlienInvasion:
         #Setup speed/scale of objects relevent to the screen size, so they're always consistent.
         self.settings.alien_speed = self.settings.screen_width / 20
         self.settings.fleet_drop_speed = self.settings.screen_height / 40
-        self.settings.bullet_width = self.settings.screen_width / 200
+        self.settings.bullet_width = self.settings.screen_width #/200
         self.settings.bullet_height = self.settings.screen_height / 100
         self.settings.bullet_speed = self.settings.screen_height
 
@@ -320,7 +322,6 @@ class AlienInvasion:
 
     def _change_fleet_direction(self):
         """Drop the entire fleet and change the fleet's direction"""
-        print("_change_fleet_direction")
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
