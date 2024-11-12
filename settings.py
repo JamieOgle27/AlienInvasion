@@ -7,7 +7,7 @@ class Settings:
         self.screen_width = 500
         self.screen_height = 500
         self.bg_color = (255, 255, 255)
-        self.fullscreen = False
+        self.fullscreen = True
 
         # Ship settings
         self.ship_speed = 220
@@ -19,7 +19,8 @@ class Settings:
         self.bullet_height = 0
         self.bullet_color = (20,20,20)
         self.bullets_allowed = 2
-        self.bullet_penetration = 1 #How many aliens a bullet can penetrate before being destroyed
+        self.bullet_penetration = 2 #How many aliens a bullet can penetrate before being destroyed
+        self.bullet_bounce = False
 
         # Alien settings
         self.alien_speed = 0

@@ -146,7 +146,6 @@ class AlienInvasion:
                     self.settings.bullet_height *= 1.1
                 if value == 1:
                     self.settings.bullet_penetration += 1
-                    #print("Bullet Penetration")
                 if value == 2:
                     print("Shield")
                 if value == 3:
@@ -158,7 +157,7 @@ class AlienInvasion:
                 if value == 6:
                     self.settings.ship_speed += 0.2
                 if value == 7:
-                    print("Bounce Bullet")
+                    self.settings.bullet_bounce = True
                 if value == 8:
                     print("Bombs")
 
@@ -223,7 +222,13 @@ class AlienInvasion:
         #get rid of bullets that have disappeared
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <=0:
-                self.bullets.remove(bullet)
+                if self.settings.bullet_bounce == True:
+                    bullet.bullet_bounced = True
+                else:
+                    self.bullets.remove(bullet)
+            if bullet.rect.top >= self.settings.screen_height:
+                    self.bullets.remove(bullet)
+
                 #print(len(self.bullets))   #Debug: Check bullet count (bullets should be added when fired and removed once offscreen)
 
         self._check_bullet_alien_collisons()
@@ -233,10 +238,9 @@ class AlienInvasion:
     def _check_bullet_alien_collisons(self):        
         #Check for any bullets that have hit aliens
         #If so alien + bullet need to be removed
-        collisionsAlt = pygame.sprite.groupcollide(self.aliens, self.bullets, False, False)
-        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, False, True) 
+        collisionsAlt = pygame.sprite.groupcollide(self.aliens, self.bullets, False, False) #Need to grab bullets that are colliding to handle bullet penetration
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, False, True) #need to grab aliens colliding to handle damage / score generation
         if collisions:
-            print(collisions.values())
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
@@ -244,12 +248,18 @@ class AlienInvasion:
         if collisionsAlt:
             for bullets in collisionsAlt.values():
                 i = 0
-                while i < len(collisionsAlt.values()):
-                    if bullets[i].bullet_penetration == 0:
-                        self.bullets.remove(bullets[i])
-                    elif bullets[i].bullet_penetration > 0:
-                        bullets[i].bullet_penetration -= 1
-                    i += 1
+                remove = []
+                j = 0
+                while j < len(bullets):
+                    if bullets[j].bullet_penetration == 0:
+                        if bullets[j] is not remove:
+                            remove.append(bullets[j])
+                    elif bullets[j].bullet_penetration > 0:
+                        bullets[j].bullet_penetration -= 1
+                    j += 1
+                for bullet in remove:
+                    self.bullets.remove(bullet)
+                remove = []
 
 
         if not self.aliens:
@@ -406,7 +416,7 @@ class AlienInvasion:
             self.bullets.add(new_bullet)
 
 
-
+ 
 if __name__ =='__main__':
     # Make a game instance, and run the game.
     ai = AlienInvasion()

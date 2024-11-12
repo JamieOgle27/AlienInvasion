@@ -19,11 +19,15 @@ class Bullet(Sprite):
         self.y = float(self.rect.y)
 
         self.bullet_penetration = self.settings.bullet_penetration
+        self.bullet_bounced = False
 
     def update(self, dt):
         """Move the bullet up the screen"""
         #Update the decimal position of the bullet
-        self.y -= self.settings.bullet_speed * dt
+        if not self.bullet_bounced:
+            self.y -= self.settings.bullet_speed * dt
+        elif self.bullet_bounced:
+            self.y += self.settings.bullet_speed * dt
         #update the rect position
         self.rect.y = self.y
 
