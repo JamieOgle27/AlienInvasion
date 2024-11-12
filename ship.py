@@ -14,7 +14,7 @@ class Ship(Sprite):
 
         #Load the ship image and get it's rect.
         self.image = pygame.image.load('images/ship.bmp')
-        self.image = pygame.transform.scale(self.image, (self.settings.screen_width / 30, self.settings.screen_height / 20))
+        self.image = pygame.transform.scale(self.image, (self.settings.screen_width / 25, self.settings.screen_height / 30))
         self.rect = self.image.get_rect()
         #Start eacg new ship at the bottom center of the screen.
         self.rect.midbottom = self.screen_rect.midbottom
