@@ -7,7 +7,7 @@ class Settings:
         self.screen_width = 900
         self.screen_height = 600
         self.bg_color = (255, 255, 255)
-        self.fullscreen = False
+        self.fullscreen = True
 
         # Ship settings
         self.ship_speed = 220
@@ -15,14 +15,14 @@ class Settings:
 
         # Bullet settings
         self.bullet_speed = 420
-        self.bullet_width = 5 #Upgrade idea: Thick bullets (increase bullet width)
+        self.bullet_width = 0 
         self.bullet_height = 15
         self.bullet_color = (20,20,20)
         self.bullets_allowed = 4
 
         # Alien settings
-        self.alien_speed = 130
-        self.fleet_drop_speed = 12
+        self.alien_speed = 0
+        self.fleet_drop_speed = 0
         #Fleet direction of 1 == right; -1 == left
         self.fleet_direction = 1
         self.speedup_scale = 1.1 #Increase in speed per level

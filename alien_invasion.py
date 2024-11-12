@@ -18,15 +18,7 @@ class AlienInvasion:
         """initilize the game, and create game resources"""
         pygame.init()
         self.settings = Settings()
-
-        self.fullscreen = self.settings.fullscreen
-
-        if self.fullscreen:
-            self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-            self.settings.screen_width = self.screen.get_rect().width
-            self.settings.screen_height = self.screen.get_rect().height
-        else:
-            self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+        self.settings_init()
 
         self.stats = GameStats(self)
         self.sb = Scoreboard(self)
@@ -36,7 +28,15 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
 
         self._create_fleet()
+        self.buttons_init()
 
+        pygame.display.set_caption("Alien Invasion")
+
+        self.prev_time = time.time()
+        self.dt = 0
+
+    def buttons_init(self):
+        """Setup buttons and button behaviour"""
         self.mouse_button_up = True
 
         #Make the play Button
@@ -60,11 +60,21 @@ class AlienInvasion:
         self.add_enemy_button = Button(self, "Add Enemy", 1.5, 0.5)
         self.next_level_button = Button(self, "Next Level", 1.75, 1.75)
 
-        pygame.display.set_caption("Alien Invasion")
+    def settings_init(self):
+        """Setup any inital settings, including screen size, speed of objects"""
+        self.fullscreen = self.settings.fullscreen
 
-        self.prev_time = time.time()
-        self.dt = 0
+        if self.fullscreen:
+            self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+            self.settings.screen_width = self.screen.get_rect().width
+            self.settings.screen_height = self.screen.get_rect().height
+        else:
+            self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
 
+        #Setup speed/scale of objects relevent to the screen size, so they're always consistent.
+        self.settings.alien_speed = self.settings.screen_width / 10
+        self.settings.fleet_drop_speed = self.settings.screen_height / 20
+        self.settings.bullet_width = self.settings.screen_height / 150
 
     def run_game(self):
         """Start the main loop for the game"""
