@@ -76,7 +76,7 @@ class AlienInvasion:
         #Setup speed/scale of objects relevent to the screen size, so they're always consistent.
         self.settings.alien_speed = self.settings.screen_width / 20
         self.settings.fleet_drop_speed = self.settings.screen_height / 40
-        self.settings.bullet_width = self.settings.screen_width #/200
+        self.settings.bullet_width = self.settings.screen_width /200
         self.settings.bullet_height = self.settings.screen_height / 100
         self.settings.bullet_speed = self.settings.screen_height
 
