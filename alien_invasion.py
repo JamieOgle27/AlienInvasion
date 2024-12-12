@@ -169,7 +169,7 @@ class AlienInvasion:
     def _check_enemy_buttons(self, mouse_pos):
         add_enemy_button_clicked = self.add_enemy_button.rect.collidepoint(mouse_pos)
         if add_enemy_button_clicked:
-            print("Add Enemy Button Clicked") #Todo: Extra Enemies system
+            self.settings.number_of_rows += 1
         next_level_button_clicked = self.next_level_button.rect.collidepoint(mouse_pos)
         if next_level_button_clicked:
             self.next_level()
@@ -361,10 +361,13 @@ class AlienInvasion:
         #Determine how many rows of aliens fit on screen
         ship_height = self.ship.rect.height
         available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
-        number_rows = available_space_y // (2 * alien_height)
+        max_number_rows = available_space_y // (2 * alien_height)
+        rows = self.settings.number_of_rows
+        if rows > max_number_rows:
+            rows = max_number_rows
 
         #Create the full fleet of aliens
-        for row_number in range(number_rows):
+        for row_number in range(rows):
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
