@@ -27,7 +27,7 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
 
-        self._create_fleet()
+        #self._create_fleet() #If we want to show the aliens behind the start game button, then we can use this but this happens when the player clicks start game anyway, so a bit needless. 
         self.buttons_init()
 
         pygame.display.set_caption("Alien Invasion")
