@@ -4,7 +4,7 @@ from pygame.sprite import Sprite
 class Bullet(Sprite):
     """A class to manage bullets fired from the ship."""
 
-    def __init__(self, ai_game):
+    def __init__(self, ai_game, offset):
 
         super().__init__()
         self.screen = ai_game.screen
@@ -17,6 +17,7 @@ class Bullet(Sprite):
 
         #Store the bullet's position as a decimal value
         self.y = float(self.rect.y)
+        self.rect.x += offset
 
         self.bullet_penetration = self.settings.bullet_penetration
         self.bullet_bounced = False

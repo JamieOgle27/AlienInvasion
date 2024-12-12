@@ -18,7 +18,7 @@ class Settings:
         self.bullet_width = 0  
         self.bullet_height = 0
         self.bullet_color = (20,20,20)
-        self.bullets_allowed = 2
+        self.bullets_allowed = 3
         self.bullet_penetration = 2 #How many aliens a bullet can penetrate before being destroyed
         self.bullet_bounce = False
 

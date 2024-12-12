@@ -147,7 +147,7 @@ class AlienInvasion:
                 if value == 1:
                     self.settings.bullet_penetration += 1
                 if value == 2:
-                    print("Shield")
+                    print("Shield") #Need enemies that shoot bullets for this one. 
                 if value == 3:
                     print("Double Bullets")
                 if value == 4:
@@ -159,7 +159,7 @@ class AlienInvasion:
                 if value == 7:
                     self.settings.bullet_bounce = True
                 if value == 8:
-                    print("Bombs")
+                    print("Bombs") 
 
 
         next_button_clicked = self.next_button.rect.collidepoint(mouse_pos)
@@ -414,9 +414,22 @@ class AlienInvasion:
 
     def _fire_bullet(self):
         """Creates a new bullet and adds it to the bullets group"""
-        if len(self.bullets) < self.settings.bullets_allowed:
-            new_bullet = Bullet(self)
-            self.bullets.add(new_bullet)
+        double_bullet = True #BUG: This needs to be in settings and changed via the upgrade. 
+        offset = 10 #BUG: This needs to a multiple of the bullet size so it's consitent accross screen sizes
+        if double_bullet:
+            if len(self.bullets) < self.settings.bullets_allowed*2: #We do this times 2 so as to not penalise the player for taking double bullets
+                new_bullet = Bullet(self, -offset)
+                self.bullets.add(new_bullet)
+                new_bullet = Bullet(self, offset)
+                self.bullets.add(new_bullet)
+        else:
+            if len(self.bullets) < self.settings.bullets_allowed:
+                new_bullet = Bullet(self, 0)
+                self.bullets.add(new_bullet)
+
+
+            #if double bullets == true, we need to create 2 bullets and space them a little bit apart (the size of half a bullet space apart makes sense.)
+            #Make sure we test the double bullet stuff with the min and max size a bullet can be
 
 
  
