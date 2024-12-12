@@ -153,7 +153,7 @@ class AlienInvasion:
                 if value == 4:
                     self.settings.bullets_allowed += 1
                 if value == 5:
-                    self.ships_left += 1
+                    self.stats.ships_left += 1
                 if value == 6:
                     self.settings.ship_speed += 0.2
                 if value == 7:
