@@ -234,13 +234,47 @@ class AlienInvasion:
                 #print(len(self.bullets))   #Debug: Check bullet count (bullets should be added when fired and removed once offscreen)
 
         self._check_bullet_alien_collisons()
-        #self._check_bullet_meteor_collisions()
+        self._check_bullet_meteor_collisions()
+
+        if not self.aliens and not self.meteors:
+            #Destroy existing bullets
+            self.bullets.empty()
+            self.upgrade_screen()
+
+    def _check_bullet_meteor_collisions(self):
+        #Check for any bullets that have hit aliens
+        #If so alien + bullet need to be removed
+        collisionsAlt = pygame.sprite.groupcollide(self.meteors, self.bullets, False, False) #Need to grab bullets that are colliding to handle bullet penetration
+        collisions = pygame.sprite.groupcollide(self.bullets, self.meteors, False, True) #need to grab aliens colliding to handle damage / score generation
+
+        if collisions:
+            for meteors in collisions.values():
+                self.stats.score += self.settings.alien_points * len(meteors) #Need meteor_points
+            self.sb.prep_score()
+            self.sb.check_high_score()
+        if collisionsAlt:
+            for bullets in collisionsAlt.values():
+                i = 0
+                remove = []
+                j = 0
+                while j < len(bullets):
+                    if bullets[j].bullet_penetration == 0:
+                        if bullets[j] is not remove:
+                            remove.append(bullets[j])
+                    elif bullets[j].bullet_penetration > 0:
+                        bullets[j].bullet_penetration -= 1
+                    j += 1
+                for bullet in remove:
+                    self.bullets.remove(bullet)
+                remove = []
+
 
     def _check_bullet_alien_collisons(self):        
         #Check for any bullets that have hit aliens
         #If so alien + bullet need to be removed
         collisionsAlt = pygame.sprite.groupcollide(self.aliens, self.bullets, False, False) #Need to grab bullets that are colliding to handle bullet penetration
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, False, True) #need to grab aliens colliding to handle damage / score generation
+
         if collisions:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
@@ -261,12 +295,6 @@ class AlienInvasion:
                 for bullet in remove:
                     self.bullets.remove(bullet)
                 remove = []
-
-
-        if not self.aliens and not self.meteors:
-            #Destroy existing bullets
-            self.bullets.empty()
-            self.upgrade_screen()
 
     def upgrade_screen(self):
         """Upgrade Alien Craft screen"""
