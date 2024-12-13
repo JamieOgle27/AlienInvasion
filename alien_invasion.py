@@ -407,7 +407,7 @@ class AlienInvasion:
     def _create_meteor(self):
         meteor = Meteor(self)
         meteor_width, meteor_height = meteor.rect.size
-        meteor.rect.x = meteor.x
+        meteor.rect.y = meteor.y
         self.meteors.add(meteor)
 
 

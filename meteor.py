@@ -19,8 +19,9 @@ class Meteor(Sprite):
         self.rect.center = self.screen_rect.center
 
         #Strat the meteor at the top of the screen somewhere randomly
-        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
 
     def update(self, dt):
         """Move the meteor to the bottom of the screen"""
-        self.rect.y += (self.settings.alien_speed * 10 * dt) #Todo: setup self.settings.meteor_speed
+        self.y += (self.settings.alien_speed * dt) #Todo: setup self.settings.meteor_speed
+        self.rect.y = self.y
