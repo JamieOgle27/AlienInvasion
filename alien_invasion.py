@@ -10,6 +10,7 @@ from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from meteor import Meteor
 
 class AlienInvasion:
     """Overall class to manage game assets and behaviour."""
@@ -26,6 +27,7 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.meteors = pygame.sprite.Group()
 
         #self._create_fleet() #If we want to show the aliens behind the start game button, then we can use this but this happens when the player clicks start game anyway, so a bit needless. 
         self.buttons_init()
@@ -88,8 +90,7 @@ class AlienInvasion:
             if self.stats.game_active == 1: #1 - gameplay
                 self.ship.update(self.dt)
                 self._update_bullets()
-                self._update_aliens()
-
+                self._update_enemies()
             self._update_screen()
 
             # Make the most recently drawn screen visible
@@ -147,9 +148,9 @@ class AlienInvasion:
                 if value == 1:
                     self.settings.bullet_penetration += 1
                 if value == 2:
-                    print("Shield") #Need enemies that shoot bullets for this one. 
+                    print("Shield") #Need enemies that shoot bullets for this one.
                 if value == 3:
-                    print("Double Bullets")
+                    self.settings.double_bullet = True
                 if value == 4:
                     self.settings.bullets_allowed += 1
                 if value == 5:
@@ -159,7 +160,7 @@ class AlienInvasion:
                 if value == 7:
                     self.settings.bullet_bounce = True
                 if value == 8:
-                    print("Bombs") 
+                    print("Bombs") #TBC
 
 
         next_button_clicked = self.next_button.rect.collidepoint(mouse_pos)
@@ -186,14 +187,15 @@ class AlienInvasion:
         #Get rid of aliens and bullets
         self.aliens.empty()
         self.bullets.empty()
+        self.meteors.empty()
 
         #Create a new fleet and center ship
         self._create_fleet()
+        self._create_meteor_shower()
         self.ship.center_ship()
 
         #Hide the mouse cursor.
         pygame.mouse.set_visible(False)
-
 
     def _check_keydown_events(self, event):
         """Respons to key presses."""
@@ -232,8 +234,7 @@ class AlienInvasion:
                 #print(len(self.bullets))   #Debug: Check bullet count (bullets should be added when fired and removed once offscreen)
 
         self._check_bullet_alien_collisons()
-
-
+        #self._check_bullet_meteor_collisions()
 
     def _check_bullet_alien_collisons(self):        
         #Check for any bullets that have hit aliens
@@ -262,7 +263,7 @@ class AlienInvasion:
                 remove = []
 
 
-        if not self.aliens:
+        if not self.aliens and not self.meteors:
             #Destroy existing bullets
             self.bullets.empty()
             self.upgrade_screen()
@@ -277,18 +278,37 @@ class AlienInvasion:
         self.stats.game_active = 3 # 3 = enemy_screen
         pygame.mouse.set_visible(True)
 
-
     def next_level(self):
         self.stats.game_active = 1 # 1 - gameplay
         pygame.mouse.set_visible(False)
 
         #create new fleet
         self._create_fleet()
+        self._create_meteor_shower()
         self.settings.increase_speed()
 
         #increase level
         self.stats.level += 1
         self.sb.prep_level()
+
+    def _update_enemies(self):
+        self._update_meteors()
+        self._update_aliens()
+        self.stats.enemies_left = len(self.aliens) + len(self.meteors)
+        self.sb.prep_enemies()
+
+        
+    def _update_meteors(self):
+        """update pos of meteors"""
+        self.meteors.update(self.dt)
+        self._check_meteor_ship_collisons()
+
+    def _check_meteor_ship_collisons(self):
+        #Check if the aliens have hit the ship
+        if pygame.sprite.spritecollideany(self.ship, self.meteors):
+            self._ship_hit()
+            #print("Ship has been hit by an meteor!") #Debug: Check for ship being hit
+
 
     def _update_aliens(self):
         """Update pos of aliens"""
@@ -297,16 +317,12 @@ class AlienInvasion:
         self._check_alien_ship_collisons()
         self._check_aliens_bottom()
 
-        #Update enemies left UI
-        self.stats.enemies_left = len(self.aliens)
-        self.sb.prep_enemies()
-
     def _check_aliens_bottom(self):
         """Check if any aliens have hit the bottom of the screen"""
         screen_rect = self.screen.get_rect()
         for alien in self.aliens.sprites():
             if alien.rect.bottom >= screen_rect.bottom:
-                self._ship_hit()
+                self._ship_hit() #TODO? Do we care about this, can something hit the bottom of the screen without hitting the player anyway?
                 #print("An alien has reached the bottom of the screen, the ship has been hit") #Debug: Check for ship being hit
                 break
 
@@ -324,10 +340,12 @@ class AlienInvasion:
 
             #Get rid of any aliens + bullets
             self.aliens.empty()
+            self.meteors.empty()
             self.bullets.empty()
 
             #Create a new fleet and center the ship
             self._create_fleet()
+            self._create_meteor_shower()
             self.ship.center_ship()
 
             # Pause
@@ -337,7 +355,7 @@ class AlienInvasion:
             pygame.mouse.set_visible(True)
 
     def _check_fleet_edges(self):
-        """Respon to a alien hitting the edge of the screen"""
+        """Respond to a alien hitting the edge of the screen"""
         for alien in self.aliens.sprites():
             if alien.check_edges():
                 self._change_fleet_direction()
@@ -380,6 +398,18 @@ class AlienInvasion:
         alien.rect.y = alien_height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
+    def _create_meteor_shower(self):
+        meteor = Meteor(self)
+        meteor_width, meteor_height = meteor.rect.size
+        self._create_meteor()
+
+
+    def _create_meteor(self):
+        meteor = Meteor(self)
+        meteor_width, meteor_height = meteor.rect.size
+        meteor.rect.x = meteor.x
+        self.meteors.add(meteor)
+
 
     def _update_screen(self):
         """Redraw the screen during each pass through the loop."""
@@ -389,7 +419,9 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
 
+        #Put both of these in self.enemies.draw(self.screen)??
         self.aliens.draw(self.screen)
+        self.meteors.draw(self.screen)
 
         #Draw the scoreboard
         self.sb.show_score()
@@ -407,16 +439,14 @@ class AlienInvasion:
 
         #Draw the enemy screen if game_state is enemy_screen
         if self.stats.game_active == 3: # 3 - enemy_screen
-            self.add_enemy_button.draw_button() #Draw this for now, but it shouldn't work
-            self.next_level_button.draw_button() #Draw this for now, but it shouldn't work
-
+            self.add_enemy_button.draw_button() 
+            self.next_level_button.draw_button() 
         pygame.display.flip()
 
     def _fire_bullet(self):
         """Creates a new bullet and adds it to the bullets group"""
-        double_bullet = True #BUG: This needs to be in settings and changed via the upgrade. 
         offset = 10 #BUG: This needs to a multiple of the bullet size so it's consitent accross screen sizes
-        if double_bullet:
+        if self.settings.double_bullet:
             if len(self.bullets) < self.settings.bullets_allowed*2: #We do this times 2 so as to not penalise the player for taking double bullets
                 new_bullet = Bullet(self, -offset)
                 self.bullets.add(new_bullet)
