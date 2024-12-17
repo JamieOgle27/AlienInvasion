@@ -13,7 +13,7 @@ class Meteor(Sprite):
 
 
         #Load the meteor image and set it's rect attribute
-        self.image = pygame.image.load('images/alien.bmp') #Need to replace this image with a meteor
+        self.image = pygame.image.load('images/meteor.bmp') #Need to replace this image with a meteor
         self.image = pygame.transform.scale(self.image, (self.settings.screen_width / 25, self.settings.screen_height / 20))
         self.rect = self.image.get_rect()
         self.rect.center = self.screen_rect.center
