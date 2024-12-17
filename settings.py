@@ -4,8 +4,8 @@ class Settings:
     def __init__(self):
         """Initialize the games  settings."""
         # Screen settings
-        self.screen_width = 500
-        self.screen_height = 500
+        self.screen_width = 640
+        self.screen_height = 480
         self.bg_color = (255, 255, 255)
         self.fullscreen = False
 
@@ -18,6 +18,7 @@ class Settings:
         self.bullet_width = 0  
         self.bullet_height = 0
         self.bullet_color = (20,20,20)
+        self.enemy_bullet_color = (0, 200, 0)
         self.bullets_allowed = 3
         self.bullet_penetration = 2 #How many aliens a bullet can penetrate before being destroyed
         self.bullet_bounce = False #Upgrade - do the bullets bounce back off the top of the screen

@@ -99,6 +99,7 @@ class AlienInvasion:
             self.delta_time()
 
     def delta_time(self):
+        """Keep the game running using delta time so it's consistent accross computers"""
         now = time.time()
         self.dt = now - self.prev_time
         self.prev_time = now
@@ -155,6 +156,10 @@ class AlienInvasion:
                     self.settings.bullets_allowed += 1
                 if value == 5:
                     self.stats.ships_left += 1
+                    self.sb.prep_ships()
+                    #TODO (X2):
+                    #Need a max lives check here. 
+                    #probs need a def _extra_ship(self, ships) Where ships = number of extra ships
                 if value == 6:
                     self.settings.ship_speed += 0.2
                 if value == 7:
@@ -174,6 +179,26 @@ class AlienInvasion:
         next_level_button_clicked = self.next_level_button.rect.collidepoint(mouse_pos)
         if next_level_button_clicked:
             self.next_level()
+
+    def _check_keydown_events(self, event):
+        """Respons to key presses."""
+        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+            self.ship.moving_right = True
+        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+            self.ship.moving_left = True
+        elif event.key == pygame.K_q:
+            sys.exit()
+        elif event.key == pygame.K_SPACE  and self.stats.game_active == 1: # 1 - gameplay
+            self._fire_bullet()
+        elif event.key == pygame.K_p and self.stats.game_active == 0: #0 - main_menu
+            self._start_game()
+
+    def _check_keyup_events(self, event):
+        """respons to key relseases"""
+        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+            self.ship.moving_right = False
+        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+            self.ship.moving_left = False
 
     def _start_game(self):
          #Reset game stats
@@ -196,27 +221,6 @@ class AlienInvasion:
 
         #Hide the mouse cursor.
         pygame.mouse.set_visible(False)
-
-    def _check_keydown_events(self, event):
-        """Respons to key presses."""
-        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-            self.ship.moving_right = True
-        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
-            self.ship.moving_left = True
-        elif event.key == pygame.K_q:
-            sys.exit()
-        elif event.key == pygame.K_SPACE:
-            self._fire_bullet()
-        elif event.key == pygame.K_p and self.stats.game_active == 0: #0 - main_menu
-            self._start_game()
-
-
-    def _check_keyup_events(self, event):
-        """respons to key relseases"""
-        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-            self.ship.moving_right = False
-        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
-            self.ship.moving_left = False
 
     def _update_bullets(self):
         self.bullets.update(self.dt)
@@ -268,7 +272,6 @@ class AlienInvasion:
                     self.bullets.remove(bullet)
                 remove = []
 
-
     def _check_bullet_alien_collisons(self):        
         #Check for any bullets that have hit aliens
         #If so alien + bullet need to be removed
@@ -282,7 +285,6 @@ class AlienInvasion:
             self.sb.check_high_score()
         if collisionsAlt:
             for bullets in collisionsAlt.values():
-                i = 0
                 remove = []
                 j = 0
                 while j < len(bullets):
@@ -297,7 +299,7 @@ class AlienInvasion:
                 remove = []
 
     def upgrade_screen(self):
-        """Upgrade Alien Craft screen"""
+        """Buy Upgrades screen"""
         self.stats.game_active = 2 # 2 = upgrade_screen
         pygame.mouse.set_visible(True)
 
@@ -331,12 +333,6 @@ class AlienInvasion:
         self.meteors.update(self.dt)
         self._check_meteor_ship_collisons()
 
-    def _check_meteor_ship_collisons(self):
-        #Check if the aliens have hit the ship
-        if pygame.sprite.spritecollideany(self.ship, self.meteors):
-            self._ship_hit()
-            #print("Ship has been hit by an meteor!") #Debug: Check for ship being hit
-
 
     def _update_aliens(self):
         """Update pos of aliens"""
@@ -359,6 +355,12 @@ class AlienInvasion:
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
             #print("Ship has been hit by an alien!") #Debug: Check for ship being hit
+
+    def _check_meteor_ship_collisons(self):
+        #Check if the aliens have hit the ship
+        if pygame.sprite.spritecollideany(self.ship, self.meteors):
+            self._ship_hit()
+            #print("Ship has been hit by an meteor!") #Debug: Check for ship being hit
 
     def _ship_hit(self):
         # Decrease ships left
@@ -416,6 +418,42 @@ class AlienInvasion:
         for row_number in range(rows):
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
+
+"""
+        def _create_fleet_shooters(self):
+        ###Create a fleet of aliens shooters###
+        #Make a alien
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        available_space_x = self.settings.screen_width - (5 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+
+
+        #Determine how many rows of aliens fit on screen
+        ship_height = self.ship.rect.height
+        available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
+        max_number_rows = available_space_y // (2 * alien_height)
+        rows = self.settings.number_of_rows
+        if rows > max_number_rows:
+            rows = max_number_rows
+
+        #Create the full fleet of aliens
+        for row_number in range(rows):
+            for alien_number in range(number_aliens_x):
+                self._create_alien(alien_number, row_number)
+"""
+
+"""
+    def _create_alien_shooter(self, alien_number, row_number):
+        #create an alien shooter and place it in the row
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        alien.rect.y = alien_height + 2 * alien.rect.height * row_number
+        self.aliens.add(alien)
+"""
+
 
     def _create_alien(self, alien_number, row_number):
         #create an alien and place it in the row
