@@ -76,7 +76,7 @@ class AlienInvasion:
             self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
 
         #Setup speed/scale of objects relevent to the screen size, so they're always consistent.
-        self.settings.alien_speed = self.settings.screen_width / 20
+        self.settings.alien_speed = self.settings.screen_width / 16
         self.settings.fleet_drop_speed = self.settings.screen_height / 40
         self.settings.bullet_width = self.settings.screen_width /200
         self.settings.bullet_height = self.settings.screen_height / 100
@@ -343,9 +343,8 @@ class AlienInvasion:
 
     def _check_aliens_bottom(self):
         """Check if any aliens have hit the bottom of the screen"""
-        screen_rect = self.screen.get_rect()
         for alien in self.aliens.sprites():
-            if alien.rect.bottom >= screen_rect.bottom:
+            if alien.check_bottom():
                 self._ship_hit() #TODO? Do we care about this, can something hit the bottom of the screen without hitting the player anyway?
                 #print("An alien has reached the bottom of the screen, the ship has been hit") #Debug: Check for ship being hit
                 break
@@ -419,8 +418,8 @@ class AlienInvasion:
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
-"""
-        def _create_fleet_shooters(self):
+    """
+    def _create_fleet_shooters(self):
         ###Create a fleet of aliens shooters###
         #Make a alien
         alien = Alien(self)
@@ -441,9 +440,9 @@ class AlienInvasion:
         for row_number in range(rows):
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
-"""
+    """
 
-"""
+    """
     def _create_alien_shooter(self, alien_number, row_number):
         #create an alien shooter and place it in the row
         alien = Alien(self)
@@ -452,7 +451,7 @@ class AlienInvasion:
         alien.rect.x = alien.x
         alien.rect.y = alien_height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
-"""
+    """
 
 
     def _create_alien(self, alien_number, row_number):
@@ -467,7 +466,8 @@ class AlienInvasion:
     def _create_meteor_shower(self):
         meteor = Meteor(self)
         meteor_width, meteor_height = meteor.rect.size
-        self._create_meteor()
+        for i in range(3): #Need to track how many meteors are expected in this wave and then scatter them over the course of the level
+            self._create_meteor()
 
 
     def _create_meteor(self):
