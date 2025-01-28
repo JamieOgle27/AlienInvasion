@@ -23,6 +23,7 @@ class Settings:
         self.bullet_penetration = 2 #How many aliens a bullet can penetrate before being destroyed
         self.bullet_bounce = False #Upgrade - do the bullets bounce back off the top of the screen
         self.double_bullet = False #Upgrade - fire double bullets. 
+        self.double_bullet_offset = 0 #The offset of space between the double bullet upgrades 
 
         # Alien settings
         self.alien_speed = 0
@@ -33,6 +34,10 @@ class Settings:
         self.alien_points = 50
         self.score_scale = 1.2 #How quickly alien_points increases per level
         self.number_of_rows = 1
+
+        # Meteor settings
+        self.meteor_shower_count = 5
+        self.meteor_speed = 0
 
     def increase_speed(self):
         """Increase speed settings and alien points"""

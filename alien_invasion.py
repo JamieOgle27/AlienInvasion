@@ -77,10 +77,12 @@ class AlienInvasion:
 
         #Setup speed/scale of objects relevent to the screen size, so they're always consistent.
         self.settings.alien_speed = self.settings.screen_width / 16
+        self.settings.meteor_speed = self.settings.alien_speed #Same as above but seperate variable incase this changes down the line
         self.settings.fleet_drop_speed = self.settings.screen_height / 40
         self.settings.bullet_width = self.settings.screen_width /200
         self.settings.bullet_height = self.settings.screen_height / 100
         self.settings.bullet_speed = self.settings.screen_height
+        self.settings.double_bullet_offset = self.settings.bullet_width * 3
 
     def run_game(self):
         """Start the main loop for the game"""
@@ -466,7 +468,7 @@ class AlienInvasion:
     def _create_meteor_shower(self):
         meteor = Meteor(self)
         meteor_width, meteor_height = meteor.rect.size
-        for i in range(3): #Need to track how many meteors are expected in this wave and then scatter them over the course of the level
+        for i in range(self.settings.meteor_shower_count): #Need to track how many meteors are expected in this wave and then scatter them over the course of the level
             self._create_meteor()
 
 
@@ -511,7 +513,7 @@ class AlienInvasion:
 
     def _fire_bullet(self):
         """Creates a new bullet and adds it to the bullets group"""
-        offset = 10 #BUG: This needs to a multiple of the bullet size so it's consitent accross screen sizes
+        offset = self.settings.double_bullet_offset
         if self.settings.double_bullet:
             if len(self.bullets) < self.settings.bullets_allowed*2: #We do this times 2 so as to not penalise the player for taking double bullets
                 new_bullet = Bullet(self, -offset)
@@ -522,8 +524,6 @@ class AlienInvasion:
             if len(self.bullets) < self.settings.bullets_allowed:
                 new_bullet = Bullet(self, 0)
                 self.bullets.add(new_bullet)
-
-
             #if double bullets == true, we need to create 2 bullets and space them a little bit apart (the size of half a bullet space apart makes sense.)
             #Make sure we test the double bullet stuff with the min and max size a bullet can be
 
