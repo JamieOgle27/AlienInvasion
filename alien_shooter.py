@@ -36,6 +36,22 @@ class Alien_Shooter(Sprite):
         if self.rect.left <= 0 and self.settings.fleet_direction < 0:
             return True
 
-    def shoot(self):
-        """shoots a bullet at the player"""
+    #def shoot(self):
+    #    """shoots a bullet at the player"""
+
+    def check_edges(self):
+        """Return True if alien as at the edge of the screen"""
+        screen_rect = self.screen.get_rect()
+
+        if self.rect.right >= screen_rect.right and self.settings.fleet_direction > 0:
+            return True
+        if self.rect.left <= 0 and self.settings.fleet_direction < 0:
+            return True
+
+    def check_bottom(self):
+        """Returns True if alien hits the bottom of the screen"""
+        screen_rect = self.screen.get_rect()
+
+        if self.rect.bottom >= screen_rect.bottom:
+            return True
 

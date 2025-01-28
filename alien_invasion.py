@@ -10,6 +10,7 @@ from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from alien_shooter import Alien_Shooter
 from meteor import Meteor
 
 class AlienInvasion:
@@ -420,40 +421,38 @@ class AlienInvasion:
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
-    """
+    
     def _create_fleet_shooters(self):
         ###Create a fleet of aliens shooters###
         #Make a alien
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
-        available_space_x = self.settings.screen_width - (5 * alien_width)
-        number_aliens_x = available_space_x // (2 * alien_width)
+        alien_shooter = Alien_Shooter(self)
+        alien_shooter_width, alien_shooter_height = alien_shooter.rect.size
+        available_space_x = self.settings.screen_width - (5 * alien_shooter_width)
+        number_aliens_x = available_space_x // (2 * alien_shooter_width)
+
 
 
         #Determine how many rows of aliens fit on screen
         ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
-        max_number_rows = available_space_y // (2 * alien_height)
+        available_space_y = (self.settings.screen_height - (3 * alien_shooter_height) - ship_height)
+        max_number_rows = available_space_y // (2 * alien_shooter_height)
         rows = self.settings.number_of_rows
         if rows > max_number_rows:
             rows = max_number_rows
 
         #Create the full fleet of aliens
         for row_number in range(rows):
-            for alien_number in range(number_aliens_x):
-                self._create_alien(alien_number, row_number)
-    """
+            for alien_shooter_number in range(number_aliens_x):
+                self._create_alien_shooter(alien_shooter_number, row_number)
 
-    """
-    def _create_alien_shooter(self, alien_number, row_number):
+    def _create_alien_shooter(self, alien_shooter_number, row_number):
         #create an alien shooter and place it in the row
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
-        alien.x = alien_width + 2 * alien_width * alien_number
-        alien.rect.x = alien.x
-        alien.rect.y = alien_height + 2 * alien.rect.height * row_number
-        self.aliens.add(alien)
-    """
+        alien_shooter = Alien_Shooter(self)
+        alien_shooter_width, alien_shooter_height = alien_shooter.rect.size
+        alien_shooter.x = alien_shooter_width + 2 * alien_shooter_width * alien_shooter_number
+        alien_shooter.rect.x = alien_shooter.x
+        alien_shooter.rect.y = alien_shooter_height + 2 * alien_shooter.rect.height * row_number
+        self.aliens.add(alien_shooter)
 
 
     def _create_alien(self, alien_number, row_number):
