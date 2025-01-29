@@ -7,6 +7,7 @@ class Settings:
         self.screen_width = 640
         self.screen_height = 480
         self.bg_color = (255, 255, 255)
+        self.ui_bg_color = (255, 255, 255)
         self.fullscreen = False
 
         # Ship settings

@@ -30,7 +30,7 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
         self.meteors = pygame.sprite.Group()
 
-        #self._create_fleet() #If we want to show the aliens behind the start game button, then we can use this but this happens when the player clicks start game anyway, so a bit needless. 
+        #self._create_wave() #If we want to show the aliens behind the start game button, then we can use this but this happens when the player clicks start game anyway, so a bit needless. 
         self.buttons_init()
 
         pygame.display.set_caption("Alien Invasion")
@@ -83,7 +83,7 @@ class AlienInvasion:
         self.settings.bullet_width = self.settings.screen_width /200
         self.settings.bullet_height = self.settings.screen_height / 100
         self.settings.bullet_speed = self.settings.screen_height
-        self.settings.double_bullet_offset = self.settings.bullet_width * 3
+        self.settings.double_bullet_offset = self.settings.bullet_width * 1.3
 
     def run_game(self):
         """Start the main loop for the game"""
@@ -147,14 +147,16 @@ class AlienInvasion:
             if upgrade_button_clicked:
                 #Todo: upgrade system
                 if value == 0:
-                    self.settings.bullet_width *= 1.2
+                    self.settings.bullet_width *= 1.1
                     self.settings.bullet_height *= 1.1
+                    self.settings.double_bullet_offset = self.settings.bullet_width * 1.3 #We do this so the bullet_width is accurate to the bullet size
                 if value == 1:
                     self.settings.bullet_penetration += 1
                 if value == 2:
                     print("Shield") #Need enemies that shoot bullets for this one.
                 if value == 3:
                     self.settings.double_bullet = True
+                    self.settings.double_bullet_offset = self.settings.bullet_width * 1.3 #We do this so the bullet_width is accurate to the bullet size
                 if value == 4:
                     self.settings.bullets_allowed += 1
                 if value == 5:
@@ -218,8 +220,7 @@ class AlienInvasion:
         self.meteors.empty()
 
         #Create a new fleet and center ship
-        self._create_fleet()
-        self._create_meteor_shower()
+        self._create_wave()
         self.ship.center_ship()
 
         #Hide the mouse cursor.
@@ -316,7 +317,7 @@ class AlienInvasion:
         pygame.mouse.set_visible(False)
 
         #create new fleet
-        self._create_fleet()
+        self._create_wave()
         self._create_meteor_shower()
         self.settings.increase_speed()
 
@@ -399,6 +400,13 @@ class AlienInvasion:
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
+    def _create_wave(self):
+        """Create a wave of different enemey types"""
+        self._create_fleet()
+        self._create_meteor_shower()
+
+
+
     def _create_fleet(self):
         """Create a fleet of aliens"""
         #Make a alien
@@ -429,8 +437,6 @@ class AlienInvasion:
         alien_shooter_width, alien_shooter_height = alien_shooter.rect.size
         available_space_x = self.settings.screen_width - (5 * alien_shooter_width)
         number_aliens_x = available_space_x // (2 * alien_shooter_width)
-
-
 
         #Determine how many rows of aliens fit on screen
         ship_height = self.ship.rect.height

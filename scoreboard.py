@@ -33,7 +33,7 @@ class Scoreboard:
         rounded_score = round(self.stats.score, -1)
         score_str = "{:,}".format(rounded_score)
         score_str = str(f"Score: {score_str}")
-        self.score_image = self.font.render(score_str, True, self.text_color, self.settings.bg_color)
+        self.score_image = self.font.render(score_str, True, self.text_color)
         #self.score_image = pygame.transform.scale(self.score_image, (self.settings.screen_width / 5, self.settings.screen_height / 25))
 
 
@@ -47,7 +47,7 @@ class Scoreboard:
         high_score = round(self.stats.high_score, -1)
         high_score_str = "{:,}".format(high_score)
         high_score_str = str(f"High Score: {high_score_str}")
-        self.high_score_image = self.font.render(high_score_str, True, self.text_color, self.settings.bg_color)
+        self.high_score_image = self.font.render(high_score_str, True, self.text_color)
         #self.high_score_image = pygame.transform.scale(self.high_score_image, (self.settings.screen_width / 5, self.settings.screen_height / 25))
 
 
@@ -59,7 +59,7 @@ class Scoreboard:
     def prep_level(self):
         """Turn the level number into a rendered image"""
         level_str = str(f"Level: {self.stats.level}")
-        self.level_image = self.font.render(level_str, True, self.text_color, self.settings.bg_color)
+        self.level_image = self.font.render(level_str, True, self.text_color)
         #self.level_image = pygame.transform.scale(self.level_image, (self.settings.screen_width / 5, self.settings.screen_height / 25))
 
 
@@ -80,7 +80,7 @@ class Scoreboard:
     def prep_enemies(self):
         """Display remianing enemeies"""
         enemies_str = str(f"Enemies: {self.stats.enemies_left}")
-        self.enemy_image = self.font.render(enemies_str, True, self.text_color, self.settings.bg_color)
+        self.enemy_image = self.font.render(enemies_str, True, self.text_color)
         #self.enemy_image = pygame.transform.scale(self.enemy_image, (self.settings.screen_width / 5, self.settings.screen_height / 25))
 
 
